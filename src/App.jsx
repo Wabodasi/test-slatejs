@@ -28,6 +28,8 @@ const App = () => {
         return <Choix1 {...props} />
       case 'image':
         return <Image {...props} />
+      case 'math':
+        return <Math {...props} />
       default:
         return <DefaultElement {...props} />
       
@@ -39,24 +41,51 @@ const App = () => {
     return <Leaf {...props} />
   }, [])
 
+
+  let dd = <math>
+  <mfrac >
+      <mfrac>
+          <mi id="oo" >s</mi>
+          <mi id = 'td'>w</mi>
+          
+      </mfrac>
+      <mfrac>
+          <mi>2</mi>
+          <mi>b</mi>
+      </mfrac>
+  </mfrac>
+  
+
+</math>
+  function ajouterExpression(){
+  
+    editor.insertNodes({ type: "math", children: [{ text: "" }], expression: dd})
+  }
+  function ajouterImage(){          
+    Transforms.insertNodes(editor, { type: "image", children: [{ text: "" }],id:'1'});
+  }
+
+  function ajouterChoixImage(){
+    editor.insertNode({ type: "choix1", children: [ { type: "image", children: [{ text: "" }],id:'1'}], checked: true, id:'1'})
+  }
+
+  function ajouterChoix(){
+    editor.insertNode({ type: "code", children: [{ text: "Écrivez ici..." }]})
+  }
+
+
   return (
     <div style={{ minWidth:"600px", maxWidth: "900px", margin: "50px auto", padding: "20px", border: "1px solid #ddd", borderRadius: "8px" }}>
       <h2>PROJET QCM</h2>
-      <img src="https://www.soprinter.com/content/cache/online/620x1000/54bf71e5f3147_taille-faible-agrandissement-impression-mauvaise-qualit.jpg" />
+      
       <Slate editor={editor} initialValue={value} onChange={handleChange}>
-        <button>okssssasas</button>
-        <span
-          style={{
-            height: '100px',
-            width: '200px',
-            display: 'inline-block',
-            backgroundImage: `url("https://www.soprinter.com/content/cache/online/620x1000/54bf71e5f3147_taille-faible-agrandissement-impression-mauvaise-qualit.jpg")`
-          }}
-        ></span>
+        <button onClick={() =>{ajouterExpression()}}>Expression</button>
+        <button onClick={() =>{ajouterImage()}}>Image</button>
+        <button onClick={() =>{ajouterChoixImage()}}>Choix IMG</button>
+        <button onClick={() =>{ajouterChoix()}}>Choix</button>
         
         
-        renderElement={renderElement}
-          renderLeaf={renderLeaf}
+        
         <Editable
           renderElement={renderElement}
           renderLeaf={renderLeaf}
@@ -66,10 +95,10 @@ const App = () => {
 
           onKeyDown={event => {
             if (event.key === '&') {
-              // Prevent the ampersand character from being inserted.
+              
               event.preventDefault()
-              // Execute the `insertText` method when the event occurs.
-              editor.insertNode({ type: "code", children: [{ text: "Écrivez ici..." }]})
+              
+              editor.insertNode({ type: "back", children: [{ text: "Écrivez ici..." }]})
             }
             if(event.key == '*'){
         
@@ -82,13 +111,13 @@ const App = () => {
             }
             if((event.key == ')')){
               event.preventDefault()
-              //editor.insertNode({ type: "image", children: [{ text: "" }],id:'1'})
+              
               Transforms.insertNodes(editor, { type: "image", children: [{ text: "" }],id:'1'});
               
             }
             if((event.key == '+')){
               event.preventDefault()
-              //editor.insertNode({ type: "image", children: [{ text: "" }],id:'1'})
+              
               Editor.addMark(editor, 'bold', true)
               
             }
@@ -105,7 +134,7 @@ const CodeElement = props => {
   return (
     <pre {...props.attributes}>
       <input type="checkbox" name="1" />
-      <div>{props.children}</div>
+      <span>{props.children}</span>
     </pre>
   )
 }
@@ -145,6 +174,9 @@ const Choix = props => {
   )
 }
 
+
+
+
 const Image = ({ attributes, children, element }) => {
   return (
     <span {...attributes}  style={{ display: "inline-flex", alignItems: "center" }}>
@@ -162,7 +194,7 @@ const Choix1 = ( {attributes, children, element} )=> {
   return (
     <div {...attributes} style={
          {
-            backgroundColor:'red', 
+            //backgroundColor:'red', 
             borderRadius:'2px', 
             marginBottom:'10px'
 
@@ -198,6 +230,19 @@ const Choix1 = ( {attributes, children, element} )=> {
     </div>
   )
 }
+
+
+const Math = props => {
+  return (
+    <pre {...props.attributes} >
+      <span>{props.element.expression}</span>
+      <span contentEditable={false}>{props.children}</span>
+    </pre>
+  )
+}
+
+
+
 
 
 
